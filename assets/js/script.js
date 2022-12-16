@@ -19,7 +19,14 @@ function search(event) {
             url: currentQueryURL,
             method: "GET"
         }).then(function(response) {
-            $("#location-date").text();
+            var locationName = response.name;
+            var todayTemp = Math.floor(response.main.temp - 273.15).toFixed(2);
+            var todayWind = Math.floor(response.wind.speed * 3.6).toFixed(1);
+            var todayHumidity = response.main.humidity;
+            $("#location-date").text(locationName);
+            $("#today-temp").text("Temp: " + todayTemp + " °C");
+            $("#today-wind").text("Wind: " + todayWind + "KPH");
+            $("#today-humidity").text("Humidity: " + todayHumidity + "%");
         });
     });
 
