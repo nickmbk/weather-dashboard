@@ -3,7 +3,13 @@ var todaysDate = moment().format("[(]DD[/]MM[/]YYYY[)]")
 
 function search(event) {
     event.preventDefault();
-    var location = $("#search-input").val().trim().toLowerCase();
+    $("#forecast").empty();
+    if ($(event.target).attr("data-location") === undefined) {
+        var location = $("#search-input").val().trim().toLowerCase();
+    } else {
+        var location = $(event.target).attr("data-location");
+    }
+    
     var geoURL = "http://api.openweathermap.org/geo/1.0/direct?q=" + location + "&limit=5&appid=" + API_KEY;
 
     if (location !== "") {
@@ -38,6 +44,9 @@ function search(event) {
                 $("#today-wind").text("Wind: " + todayWind + " KPH");
                 $("#today-humidity").text("Humidity: " + todayHumidity + "%");
 
+                var newH3 = $("<h3 id='five-day'>");
+                newH3.text("5-Day Forecast:");
+                $("#forecast").append(newH3);
                 for (var i = 0; i < 5; i++) {
                     var newDiv = $("<div class='forecast'>");
                     var newDate = $("<p class='date'>");
@@ -60,3 +69,4 @@ function search(event) {
 };
 
 $("#search-button").on("click", search);
+$(document).on("click", ".history", search);
