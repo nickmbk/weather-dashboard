@@ -1,5 +1,31 @@
 var API_KEY = "121b7d3d4e8323ac3c4c503bd3a7409f";
-var todaysDate = moment().format("[(]DD[/]MM[/]YYYY[)]")
+var todaysDate = moment().format("[(]DD[/]MM[/]YYYY[)]");
+var searchHistoryString = localStorage.getItem("locationHistory");
+var searchHistoryItems = JSON.parse(searchHistoryString) ?? [];
+
+createHistoryBtns();
+
+function createHistoryBtns() {
+    $("#history-list").empty();
+    for (var i = 0; i < searchHistoryItems.length; i++) {
+        var searchHistoryBtn = $("<button class='history' data-location='" + searchHistoryItems[i] + "'><li>");
+        searchHistoryBtn.text(searchHistoryItems[i]);
+        $("#history-list").append(searchHistoryBtn);
+    }
+}
+
+function saveHistory(locationName) {
+    var checkLocation = searchHistoryItems.indexOf(locationName);
+    if (checkLocation !== -1) {
+        searchHistoryItems.splice(checkLocation, 1);
+    }
+    searchHistoryItems.unshift(locationName);
+    searchHistoryString = JSON.stringify(searchHistoryItems);
+    localStorage.setItem("locationHistory", searchHistoryString);
+    searchHistoryString = localStorage.getItem("locationHistory");
+    searchHistoryItems = JSON.parse(searchHistoryString) ?? [];
+    createHistoryBtns();
+}
 
 function search(event) {
     event.preventDefault();
@@ -61,7 +87,7 @@ function search(event) {
                     newDiv.append(newDate, newIcon, newTemp, newWind, newHumidity);
                     $("#forecast").append(newDiv);
                 }
-
+                saveHistory(locationName);
             });
         });
     }
