@@ -3,12 +3,12 @@ var todaysDate = moment().format("[(]DD[/]MM[/]YYYY[)]");
 var searchHistoryString = localStorage.getItem("locationHistory");
 var searchHistoryItems = JSON.parse(searchHistoryString) ?? [];
 
-createHistoryBtns();
+searchApi(searchHistoryItems[0]);
 
 function createHistoryBtns() {
     $("#history-list").empty();
     for (var i = 0; i < searchHistoryItems.length; i++) {
-        var searchHistoryBtn = $("<button class='history' data-location='" + searchHistoryItems[i] + "'><li>");
+        var searchHistoryBtn = $("<button class='history col-12' data-location='" + searchHistoryItems[i] + "'><li>");
         searchHistoryBtn.text(searchHistoryItems[i]);
         $("#history-list").append(searchHistoryBtn);
     }
@@ -27,15 +27,8 @@ function saveHistory(locationName) {
     createHistoryBtns();
 }
 
-function search(event) {
-    event.preventDefault();
-    $("#forecast").empty();
-    if ($(event.target).attr("data-location") === undefined) {
-        var location = $("#search-input").val().trim().toLowerCase();
-    } else {
-        var location = $(event.target).attr("data-location");
-    }
-    
+function searchApi(location) {
+
     var geoURL = "http://api.openweathermap.org/geo/1.0/direct?q=" + location + "&limit=5&appid=" + API_KEY;
 
     if (location !== "") {
@@ -46,14 +39,12 @@ function search(event) {
             var lat = response[0].lat;
             var lon = response[0].lon;
             
-            // var currentQueryURL = "https://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + lon + "&appid=" + API_KEY;
             var forecastQueryURL = "http://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + API_KEY;
 
             $.ajax({
                 url: forecastQueryURL,
                 method: "GET"
             }).then(function(response) {
-                console.log(response);
                 var fiveDaysArray = [];
                 for (var i = 0; i < response.list.length; i += 8) {
                     fiveDaysArray.push(response.list[i]);
@@ -74,7 +65,7 @@ function search(event) {
                 newH3.text("5-Day Forecast:");
                 $("#forecast").append(newH3);
                 for (var i = 0; i < 5; i++) {
-                    var newDiv = $("<div class='forecast'>");
+                    var newDiv = $("<div class='forecast col-2 m-3 p-2'>");
                     var newDate = $("<p class='date'>");
                     newDate.text(moment().add((i),'days').format("DD[/]MM[/]YYYY"));
                     var newIcon = $("<img class='icon' src='http://openweathermap.org/img/wn/" + fiveDaysArray[i].weather[0].icon + "@2x.png'>");
@@ -91,7 +82,17 @@ function search(event) {
             });
         });
     }
-    
+}
+
+function search(event) {
+    event.preventDefault();
+    $("#forecast").empty();
+    if ($(event.target).attr("data-location") === undefined) {
+        var location = $("#search-input").val().trim().toLowerCase();
+    } else {
+        var location = $(event.target).attr("data-location");
+    }
+    searchApi(location);
 };
 
 $("#search-button").on("click", search);
