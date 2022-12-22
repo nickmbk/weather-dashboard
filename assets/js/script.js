@@ -8,7 +8,7 @@ searchApi(searchHistoryItems[0]);
 function createHistoryBtns() {
     $("#history-list").empty();
     for (var i = 0; i < searchHistoryItems.length; i++) {
-        var searchHistoryBtn = $("<button class='history col-12' data-location='" + searchHistoryItems[i] + "'><li>");
+        var searchHistoryBtn = $("<button class='history-btn col-12 my-1 border-0 rounded' data-location='" + searchHistoryItems[i] + "'><li>");
         searchHistoryBtn.text(searchHistoryItems[i]);
         $("#history-list").append(searchHistoryBtn);
     }
@@ -49,24 +49,27 @@ function searchApi(location) {
                 for (var i = 0; i < response.list.length; i += 8) {
                     fiveDaysArray.push(response.list[i]);
                 }
-                console.log(fiveDaysArray);
                 var locationName = response.city.name;
                 var todayTemp = (fiveDaysArray[0].main.temp - 273.15).toFixed(2);
                 var todayWind = (fiveDaysArray[0].wind.speed * 3.6).toFixed(1);
                 var todayHumidity = fiveDaysArray[0].main.humidity;
                 var iconCode = fiveDaysArray[0].weather[0].icon;
-                $("#location-date").text(locationName + " " + todaysDate);
-                $("#weather-icon").attr("src", "http://openweathermap.org/img/wn/" + iconCode + "@2x.png");
-                $("#today-temp").text("Temp: " + todayTemp + " °C");
-                $("#today-wind").text("Wind: " + todayWind + " KPH");
-                $("#today-humidity").text("Humidity: " + todayHumidity + "%");
+                var todaysDateH2 = $("<h2 id='location-date' class='my-3 d-inline-block'>").text(locationName + " " + todaysDate);
+                var todaysIconImg = $("<img id='weather-icon'>").attr("src", "http://openweathermap.org/img/wn/" + iconCode + "@2x.png");
+                var todaysTempP = $("<p id='today-temp'>").text("Temp: " + todayTemp + " °C");
+                var todaysWindP = $("<p id='today-wind'>").text("Wind: " + todayWind + " KPH");
+                var todaysHumidityP = $("<p id='today-humidity'>").text("Humidity: " + todayHumidity + "%");
+                $("#today").append(todaysDateH2, todaysIconImg, todaysTempP, todaysWindP, todaysHumidityP);
 
+                var h3Div = $("<div class='d-block col-12'>")
                 var newH3 = $("<h3 id='five-day'>");
                 newH3.text("5-Day Forecast:");
-                $("#forecast").append(newH3);
+                h3Div.append(newH3);
+                $("#forecast").append(h3Div);
+                var fiveDayDiv = $("<div id='five-day-forecast' class='col-12 d-flex justify-content-between flex-wrap'>");
                 for (var i = 0; i < 5; i++) {
-                    var newDiv = $("<div class='forecast col-2 m-3 p-2'>");
-                    var newDate = $("<p class='date'>");
+                    var newDiv = $("<div class='forecast col-12 col-sm-6 col-lg-2 p-2 d-inline-block'>");
+                    var newDate = $("<p class='date mb-0'>");
                     newDate.text(moment().add((i),'days').format("DD[/]MM[/]YYYY"));
                     var newIcon = $("<img class='icon' src='http://openweathermap.org/img/wn/" + fiveDaysArray[i].weather[0].icon + "@2x.png'>");
                     var newTemp = $("<p class='temp'>");
@@ -76,8 +79,9 @@ function searchApi(location) {
                     var newHumidity = $("<p class='humidity'>");
                     newHumidity.text("Humidity: " + fiveDaysArray[i].main.humidity + "%");
                     newDiv.append(newDate, newIcon, newTemp, newWind, newHumidity);
-                    $("#forecast").append(newDiv);
+                    fiveDayDiv.append(newDiv);
                 }
+                $("#forecast").append(fiveDayDiv);
                 saveHistory(locationName);
             });
         });
@@ -86,6 +90,8 @@ function searchApi(location) {
 
 function search(event) {
     event.preventDefault();
+    console.log("Hola");
+    $("#today").empty();
     $("#forecast").empty();
     if ($(event.target).attr("data-location") === undefined) {
         var location = $("#search-input").val().trim().toLowerCase();
@@ -96,4 +102,4 @@ function search(event) {
 };
 
 $("#search-button").on("click", search);
-$(document).on("click", ".history", search);
+$(document).on("click", ".history-btn", search);

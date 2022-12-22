@@ -10,3 +10,41 @@
 .date {
     font-weight: bold;
 }
+
+#weather-icon {
+    width: 70px;
+}
+
+#five-day-forecast:first-child {
+    margin-left: 0;
+}
+
+#five-day-forecast:last-child {
+    margin-right: 0;
+}
+
+#history-list {
+    padding-inline-start: 0;
+}
+
+.search-button, .history-btn:hover {
+    background-color: #5098E6;
+    color: #ffffff;
+}
+
+.history-btn {
+    background-color: #AEAEAE;
+}
+
+@media (min-width: 500px) {
+    .forecast {
+        margin: 5px;
+    }
+}
+
+@media(min-width: 1000px) {
+    .forecast {
+        margin: 0;
+    }
+}
+
