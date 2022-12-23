@@ -56,7 +56,7 @@ function saveHistory(locationName) {
 // function that will search the API's and create the dynamic html to display the weather to the user, taking a parameter of location
 function searchApi(location) {
   // variable to store and use the geo API to find the long and lat coordinates for the location entered by the user
-  var geoURL = "http://api.openweathermap.org/geo/1.0/direct?q=" + location + "&limit=5&appid=" + API_KEY;
+  var geoURL = "https://api.openweathermap.org/geo/1.0/direct?q=" + location + "&limit=5&appid=" + API_KEY;
 
   // if the location text box isn't empty (the user may have clicked search without typing anything in), then proceed
   if (location !== "") {
@@ -73,7 +73,7 @@ function searchApi(location) {
       var lon = response[0].lon;
 
       // now we create the url for the weather API using the lon and lat variable to tell the API the location
-      var forecastQueryURL = "http://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + API_KEY;
+      var forecastQueryURL = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + API_KEY;
 
       // use ajax again to get the data from the weather API
       $.ajax({
