@@ -95,7 +95,7 @@ function searchApi(location) {
           // push an array inside the fiveDaysArray to store the data we need for each days forecast
           fiveDaysArray.push([
             // grabs the icon and adds it to the link to get the icon from
-            "http://openweathermap.org/img/wn/" + response.list[i].weather[0].icon + "@2x.png",
+            "https://openweathermap.org/img/wn/" + response.list[i].weather[0].icon + "@2x.png",
             // grabs the detail of the weather to put in an alt tag for the icon
             response.list[i].weather[0].main,
             // gets the temperature and converts it to celcius
