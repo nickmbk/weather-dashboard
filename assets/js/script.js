@@ -8,6 +8,7 @@ var searchHistoryItems = JSON.parse(localStorage.getItem("locationHistory")) ?? 
 
 // RUNS ON PAGE LOAD
 // if localStorage is not empty, use the searchApi function, using the first entry of the searchHistoryItems array from above as an argument, this is to immediately show the user the last city that was searched for
+// https://stackoverflow.com/questions/16010827/html5-localstorage-checking-if-a-key-exists
 if (localStorage.getItem("locationHistory") !== null) {
   searchApi(searchHistoryItems[0]);
 }

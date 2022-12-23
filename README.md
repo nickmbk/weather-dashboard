@@ -12,6 +12,8 @@ Features I think that could be added: the user can "pin" or "favurite" the locat
 
 This project has made me more confident using jQuery and especially 3rd party API's, I found API's a little confusing to begin with but the more I have used this one, the more my confidence has grown using it.
 
+As I added a feature to load the last searched city on page load, I ran in to a problem when there was nothing saved in localStorage, as it was trying to load a city that didn't exist in storage.  I found a StackOverflow post that helped me with this.  I have put the link to the post in the Credits section.
+
 ## Table of Contents
 
 - [Installation](#installation)
@@ -50,6 +52,9 @@ Resources used in this project:
 [jQuery Documentation](https://api.jquery.com/)
 
 [Moment.js Documentation](https://momentjs.com/docs/)
+
+Used this post to help me find if there was anything stored in localStorage:
+[HTML5 localStorage](https://stackoverflow.com/questions/16010827/html5-localstorage-checking-if-a-key-exists)
 
 ## License
 
