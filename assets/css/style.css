@@ -1,3 +1,4 @@
+/* Add linear gradient background to header */
 header {
   background-image: linear-gradient(90deg, #3462bb, #210b4e);
 }
@@ -11,23 +12,12 @@ header {
   width: 50px;
 }
 
-.date {
-  font-weight: bold;
-}
-
 #weather-icon {
   width: 70px;
 }
 
-#five-day-forecast:first-child {
-  margin-left: 0;
-}
-
-#five-day-forecast:last-child {
-  margin-right: 0;
-}
-
 #history-list {
+  /* remove the indentation of the ul */
   padding-inline-start: 0;
   padding: 5px;
 }
