@@ -65,12 +65,12 @@ function searchApi(location) {
 
   // if the location text box isn't empty (the user may have clicked search without typing anything in), then proceed
   if (location !== "") {
-    // use ajax within jQuery to get data from the Geo API for the long and lat coordinates 
+    // use ajax within jQuery to get data from the Geo API for the long and lat coordinates
     $.ajax({
       // using the geoURL variable above as the address
       url: geoURL,
       method: "GET",
-    // when the data is returned
+      // when the data is returned
     }).then(function (response) {
       // store the lat data from the response in the lat variable
       var lat = response[0].lat;
@@ -85,12 +85,12 @@ function searchApi(location) {
         lon +
         "&appid=" +
         API_KEY;
-      
-        // use ajax again to get the data from the weather API
+
+      // use ajax again to get the data from the weather API
       $.ajax({
         url: forecastQueryURL,
         method: "GET",
-      // once we get a response from the API then do this...
+        // once we get a response from the API then do this...
       }).then(function (response) {
         // empty the sections with the ids today and forecast
         $("#today").empty();
@@ -98,29 +98,36 @@ function searchApi(location) {
         // create a new array to store the details of the next five days in 24 hour blocks
         var fiveDaysArray = [];
         // use a for loop to go through the array of data in the API response add add that data to our own fiveDaysArray array, we are going up in eights in the for loop, because each 24 hour period is stored in every 8th array index
+        fiveDaysArray = [response.city.name];
         for (var i = 0; i < response.list.length; i += 8) {
-          fiveDaysArray.push(response.list[i]);
+          fiveDaysArray.push([
+            "http://openweathermap.org/img/wn/" + response.list[i].weather[0].icon + "@2x.png",
+            response.list[i].weather[0].main,
+            (response.list[i].main.temp - 273.15).toFixed(2),
+            (response.list[i].wind.speed * 3.6).toFixed(1),
+            response.list[i].main.humidity,
+            response.list[i].dt_txt,
+          ]);
         }
-        var locationName = response.city.name;
-        var todayTemp = (fiveDaysArray[0].main.temp - 273.15).toFixed(2);
-        var todayWind = (fiveDaysArray[0].wind.speed * 3.6).toFixed(1);
-        var todayHumidity = fiveDaysArray[0].main.humidity;
-        var iconCode = fiveDaysArray[0].weather[0].icon;
+        console.log(fiveDaysArray);
+        var locationName = fiveDaysArray[0];
         var todaysDateH2 = $(
           "<h2 id='location-date' class='my-3 d-inline-block font-weight-bold'>"
         ).text(locationName + " " + todaysDate);
         var todaysIconImg = $("<img id='weather-icon'>").attr(
           "src",
-          "http://openweathermap.org/img/wn/" + iconCode + "@2x.png"
+          fiveDaysArray[1][0],
+          "alt",
+          fiveDaysArray[1][1]
         );
         var todaysTempP = $("<p id='today-temp'>").text(
-          "Temp: " + todayTemp + " °C"
+          "Temp: " + fiveDaysArray[1][2] + " °C"
         );
         var todaysWindP = $("<p id='today-wind'>").text(
-          "Wind: " + todayWind + " KPH"
+          "Wind: " + fiveDaysArray[1][3] + " KPH"
         );
         var todaysHumidityP = $("<p id='today-humidity'>").text(
-          "Humidity: " + todayHumidity + "%"
+          "Humidity: " + fiveDaysArray[1][4] + "%"
         );
         $("#today").append(
           todaysDateH2,
@@ -130,35 +137,45 @@ function searchApi(location) {
           todaysHumidityP
         );
 
-        var h3Div = $("<div class='d-block col-12'>");
-        var newH3 = $("<h3 id='five-day' class='font-weight-bold'>");
-        newH3.text("5-Day Forecast:");
-        h3Div.append(newH3);
-        $("#forecast").append(h3Div);
+        var forecastH3Div = $("<div class='d-block col-12'>");
+        var forecastH3 = $("<h3 id='five-day' class='font-weight-bold'>");
+        forecastH3.text("5-Day Forecast:");
+        forecastH3Div.append(forecastH3);
+        $("#forecast").append(forecastH3Div);
         var fiveDayDiv = $(
           "<div id='five-day-forecast' class='col-12 d-flex justify-content-between flex-wrap'>"
         );
-        for (var i = 0; i < 5; i++) {
-          var newDiv = $("<div class='forecast col-12 col-md-5 col-lg-2 p-2'>");
-          var newDate = $("<p class='date mb-0'>");
-          newDate.text(moment().add(i, "days").format("DD[/]MM[/]YYYY"));
-          var newIcon = $(
-            "<img class='icon' src='http://openweathermap.org/img/wn/" +
-              fiveDaysArray[i].weather[0].icon +
-              "@2x.png'>"
+        for (var i = 1; i < 6; i++) {
+          var forecastCardDiv = $(
+            "<div class='forecast col-12 col-md-5 col-lg-2 p-2'>"
           );
-          var newTemp = $("<p class='temp'>");
-          newTemp.text(
-            "Temp: " + (fiveDaysArray[i].main.temp - 273.15).toFixed(2) + " °C"
+          var forecastCardDate = $("<p class='date mb-0'>");
+          forecastCardDate.text(
+            moment()
+              .add(i - 1, "days")
+              .format("DD[/]MM[/]YYYY")
           );
-          var newWind = $("<p class='wind'>");
-          newWind.text(
-            "Wind: " + (fiveDaysArray[i].wind.speed * 3.6).toFixed(1) + " KPH"
+          var forecastCardIcon = $(
+            "<img class='icon' src='" +
+              fiveDaysArray[i][0] +
+              "' alt='" +
+              fiveDaysArray[i][1] +
+              "'>"
           );
-          var newHumidity = $("<p class='humidity'>");
-          newHumidity.text("Humidity: " + fiveDaysArray[i].main.humidity + "%");
-          newDiv.append(newDate, newIcon, newTemp, newWind, newHumidity);
-          fiveDayDiv.append(newDiv);
+          var forecastCardTemp = $("<p class='temp'>");
+          forecastCardTemp.text("Temp: " + fiveDaysArray[i][2] + " °C");
+          var forecastCardWind = $("<p class='wind'>");
+          forecastCardWind.text("Wind: " + fiveDaysArray[i][3] + " KPH");
+          var forecastCardHumidity = $("<p class='humidity'>");
+          forecastCardHumidity.text("Humidity: " + fiveDaysArray[i][4] + "%");
+          forecastCardDiv.append(
+            forecastCardDate,
+            forecastCardIcon,
+            forecastCardTemp,
+            forecastCardWind,
+            forecastCardHumidity
+          );
+          fiveDayDiv.append(forecastCardDiv);
         }
         $("#forecast").append(fiveDayDiv);
         saveHistory(locationName);
