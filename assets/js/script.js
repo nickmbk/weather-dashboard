@@ -6,9 +6,11 @@ var todaysDate = moment().format("[(]DD[/]MM[/]YYYY[)]");
 // variable to initially get data from localStorage and turn it into an array to work with later
 var searchHistoryItems = JSON.parse(localStorage.getItem("locationHistory")) ?? [];
 
-//RUNS ON PAGE LOAD
-// use the searchApi function, using the first entry of the searchHistoryItems array from above as an argument, this is to immediately show the user the last city that was searched for
-searchApi(searchHistoryItems[0]);
+// RUNS ON PAGE LOAD
+// if localStorage is not empty, use the searchApi function, using the first entry of the searchHistoryItems array from above as an argument, this is to immediately show the user the last city that was searched for
+if (localStorage.getItem("locationHistory") !== null) {
+  searchApi(searchHistoryItems[0]);
+}
 
 // CREATE HISTORY BUTTONS
 // function to create the history buttons
@@ -56,7 +58,7 @@ function saveHistory(locationName) {
 // function that will search the API's and create the dynamic html to display the weather to the user, taking a parameter of location
 function searchApi(location) {
   // variable to store and use the geo API to find the long and lat coordinates for the location entered by the user
-  var geoURL = "https://api.openweathermap.org/geo/1.0/direct?q=" + location + "&limit=5&appid=" + API_KEY;
+  var geoURL = "http://api.openweathermap.org/geo/1.0/direct?q=" + location + "&limit=5&appid=" + API_KEY;
 
   // if the location text box isn't empty (the user may have clicked search without typing anything in), then proceed
   if (location !== "") {
@@ -73,7 +75,7 @@ function searchApi(location) {
       var lon = response[0].lon;
 
       // now we create the url for the weather API using the lon and lat variable to tell the API the location
-      var forecastQueryURL = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + API_KEY;
+      var forecastQueryURL = "api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + API_KEY;
 
       // use ajax again to get the data from the weather API
       $.ajax({
