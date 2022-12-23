@@ -23,7 +23,7 @@ As I added a feature to load the last searched city on page load, I ran in to a 
 
 ##  Installation
 
-This app is available at [Weather Dashboard](https://nick.mbk/github.io/weather-dashboard/)
+This app is available at [Weather Dashboard](https://nickmbk.github.io/weather-dashboard/)
 
 ## Usage
 
